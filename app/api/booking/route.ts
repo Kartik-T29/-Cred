@@ -1,10 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-
-// Server-side Supabase client — can bypass RLS or use service role
-const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
-const supabaseKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: Request) {
   try {
@@ -17,9 +12,21 @@ export async function POST(req: Request) {
       );
     }
 
-    const { error } = await supabase.from("leads").insert([
-      { name, email, phone, company },
-    ]);
+    const supabase = await createClient();
+
+    // Check if current user is authenticated and link the booking
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const leadData: Record<string, string> = { name, email, phone, company };
+
+    // If user is logged in, attach their user_id to the lead
+    if (user) {
+      leadData.user_id = user.id;
+    }
+
+    const { error } = await supabase.from("leads").insert([leadData]);
 
     if (error) {
       console.error("Supabase insert error:", error);

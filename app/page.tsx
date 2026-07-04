@@ -9,6 +9,7 @@ import Pricing from "@/components/Pricing";
 import Footer from "@/components/Footer";
 import ChatModal from "@/components/chatbot/ChatModal";
 import BookingModal from "@/components/booking/BookingModal";
+import SignupPopup from "@/components/SignupPopup";
 
 export default function Home() {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -41,6 +42,9 @@ export default function Home() {
         isOpen={isBookingOpen} 
         onClose={() => setIsBookingOpen(false)} 
       />
+
+      {/* Timed signup popup — shows after 45s for non-authenticated visitors */}
+      <SignupPopup delaySeconds={45} />
     </main>
   );
 }
