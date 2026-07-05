@@ -22,22 +22,30 @@ export default function SignupPopup({ delaySeconds = 45 }: SignupPopupProps) {
       return;
     }
 
-    // Check if user is already logged in
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let cancelled = false;
+
+    // Check if user is already logged in using getSession (reads local cookie, no network call)
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (cancelled) return;
+
+      if (session) {
         // User is logged in, don't show popup
         setIsDismissed(true);
         return;
       }
 
       // Show popup after delay
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setIsVisible(true);
       }, delaySeconds * 1000);
-
-      return () => clearTimeout(timer);
     });
+
+    return () => {
+      cancelled = true;
+      if (timer) clearTimeout(timer);
+    };
   }, [delaySeconds]);
 
   const handleDismiss = () => {

@@ -43,8 +43,8 @@ export default function Home() {
         onClose={() => setIsBookingOpen(false)} 
       />
 
-      {/* Timed signup popup — shows after 45s for non-authenticated visitors */}
-      <SignupPopup delaySeconds={45} />
+      {/* Timed signup popup — shows after 15s for non-authenticated visitors */}
+      <SignupPopup delaySeconds={15} />
     </main>
   );
 }
