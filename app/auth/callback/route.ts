@@ -11,52 +11,52 @@ export async function GET(request: Request) {
 
   // Handle OAuth callback
   if (code) {
-    const response = NextResponse.redirect(new URL(next, origin))
+    const response = NextResponse.next()
     const supabase = await createClientOnServer(response)
     
     try {
       const { data, error } = await supabase.auth.exchangeCodeForSession(code)
-      if (error) {
+      if (!error) {
+        // Set the redirect in the response that has the session cookies
+        response.headers.set('Location', new URL(next, origin).toString())
+        response.status = 302
+        return response
+      } else {
         console.error('Error exchanging code for session:', error)
-        // Create a new response for error case
-        const redirectUrl = new URL('/login', origin)
-        redirectUrl.searchParams.set('error', 'oauth-failed')
-        return NextResponse.redirect(redirectUrl)
       }
     } catch (error) {
       console.error('Unexpected error exchanging code for session:', error)
-      // Create a new response for error case
-      const redirectUrl = new URL('/login', origin)
-      redirectUrl.searchParams.set('error', 'oauth-failed')
-      return NextResponse.redirect(redirectUrl)
     }
     
-    return response
+    // Create a new response for error case
+    const redirectUrl = new URL('/login', origin)
+    redirectUrl.searchParams.set('error', 'oauth-failed')
+    return NextResponse.redirect(redirectUrl)
   }
 
   // Handle email verification callback
   if (token_hash && type) {
-    const response = NextResponse.redirect(new URL(next, origin))
+    const response = NextResponse.next()
     const supabase = await createClientOnServer(response)
     
     try {
       const { data, error } = await supabase.auth.verifyOtp({ type, token_hash })
-      if (error) {
+      if (!error) {
+        // Set the redirect in the response that has the session cookies
+        response.headers.set('Location', new URL(next, origin).toString())
+        response.status = 302
+        return response
+      } else {
         console.error('Error verifying OTP:', error)
-        // Create a new response for error case
-        const redirectUrl = new URL('/login', origin)
-        redirectUrl.searchParams.set('error', 'verification-failed')
-        return NextResponse.redirect(redirectUrl)
       }
     } catch (error) {
       console.error('Unexpected error verifying OTP:', error)
-      // Create a new response for error case
-      const redirectUrl = new URL('/login', origin)
-      redirectUrl.searchParams.set('error', 'unexpected-error')
-      return NextResponse.redirect(redirectUrl)
     }
     
-    return response
+    // Create a new response for error case
+    const redirectUrl = new URL('/login', origin)
+    redirectUrl.searchParams.set('error', 'verification-failed')
+    return NextResponse.redirect(redirectUrl)
   }
 
   // Default fallback
