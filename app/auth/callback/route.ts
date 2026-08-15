@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClientOnServer } from '@/lib/supabase/server'
 import { EmailOtpType } from '@supabase/supabase-js'
 
 export async function GET(request: Request) {
@@ -11,7 +11,9 @@ export async function GET(request: Request) {
 
   // Handle OAuth callback
   if (code) {
-    const supabase = await createClient()
+    const response = NextResponse.next()
+    const supabase = await createClientOnServer(response)
+    
     try {
       const { data, error } = await supabase.auth.exchangeCodeForSession(code)
       if (!error) {
@@ -32,7 +34,9 @@ export async function GET(request: Request) {
 
   // Handle email verification callback
   if (token_hash && type) {
-    const supabase = await createClient()
+    const response = NextResponse.next()
+    const supabase = await createClientOnServer(response)
+    
     try {
       const { data, error } = await supabase.auth.verifyOtp({ type, token_hash })
       if (!error) {
