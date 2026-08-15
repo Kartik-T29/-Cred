@@ -14,12 +14,7 @@ export async function GET(request: Request) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      // Check if this is a new user
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user?.identities?.length === 1 && user.identities[0].provider === 'google') {
-        // New Google user - redirect to complete profile if needed
-        return NextResponse.redirect(`${origin}/signup/complete`)
-      }
+      // For OAuth users, redirect to home page by default
       return NextResponse.redirect(`${origin}${next}`)
     }
     
@@ -32,6 +27,11 @@ export async function GET(request: Request) {
     const supabase = await createClient()
     const { error } = await supabase.auth.verifyOtp({ type, token_hash })
     if (!error) {
+      // After email verification, check if we should redirect to complete signup
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user?.identities?.length === 1 && !user.user_metadata?.onboarding_complete) {
+        return NextResponse.redirect(`${origin}/signup/complete`)
+      }
       return NextResponse.redirect(`${origin}${next}`)
     }
   }
