@@ -16,8 +16,8 @@ export async function signInWithEmail(formData: FormData) {
     return { error: error.message }
   }
 
-  // Redirect to dashboard after successful login
-  redirect('/dashboard')
+  // Redirect to home page after successful login
+  redirect('/')
 }
 
 export async function signUpWithEmail(formData: FormData) {
