@@ -4,19 +4,26 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { signInWithEmail, signInWithGoogle } from '@/app/actions/auth'
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const handleEmailLogin = async (formData: FormData) => {
     setLoading(true)
     setError(null)
-    const result = await signInWithEmail(formData)
-    if (result?.error) {
-      setError(result.error)
+    try {
+      const result = await signInWithEmail(formData)
+      if (result?.error) {
+        setError(result.error)
+      }
+    } catch (err) {
+      setError('An unexpected error occurred')
+    } finally {
       setLoading(false)
     }
   }
@@ -24,9 +31,14 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setLoading(true)
     setError(null)
-    const result = await signInWithGoogle()
-    if (result?.error) {
-      setError(result.error)
+    try {
+      const result = await signInWithGoogle()
+      if (result?.error) {
+        setError(result.error)
+        setLoading(false)
+      }
+    } catch (err) {
+      setError('An unexpected error occurred')
       setLoading(false)
     }
   }
