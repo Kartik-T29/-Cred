@@ -11,8 +11,7 @@ export async function GET(request: Request) {
 
   // Handle OAuth callback
   if (code) {
-    const response = NextResponse.next()
-    const supabase = await createClientOnServer(response)
+    const supabase = await createClientOnServer(NextResponse.next())
     
     try {
       const { data, error } = await supabase.auth.exchangeCodeForSession(code)
@@ -34,8 +33,7 @@ export async function GET(request: Request) {
 
   // Handle email verification callback
   if (token_hash && type) {
-    const response = NextResponse.next()
-    const supabase = await createClientOnServer(response)
+    const supabase = await createClientOnServer(NextResponse.next())
     
     try {
       const { data, error } = await supabase.auth.verifyOtp({ type, token_hash })

@@ -16,8 +16,8 @@ export async function signInWithEmail(formData: FormData) {
     return { error: error.message }
   }
 
-  // Return success instead of immediate redirect to allow proper session handling
-  return { success: true }
+  // Redirect to home page after successful login
+  redirect('/')
 }
 
 export async function signUpWithEmail(formData: FormData) {
@@ -97,6 +97,6 @@ export async function signOut() {
     return { error: 'Failed to sign out' }
   }
   
-  // Return success instead of immediate redirect
-  return { success: true }
+  // Redirect to login page after sign out
+  redirect('/login')
 }
