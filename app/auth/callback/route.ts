@@ -15,16 +15,6 @@ export async function GET(request: Request) {
     try {
       const { error } = await supabase.auth.exchangeCodeForSession(code)
       if (!error) {
-        // Check if user needs onboarding
-        const { data: { user } } = await supabase.auth.getUser()
-        if (user) {
-          // Example check - you can customize this based on your onboarding logic
-          const needsOnboarding = !user.user_metadata?.onboarding_complete;
-          
-          // If you have an onboarding flow, redirect there
-          // For now, we'll just redirect to the normal next destination
-          return NextResponse.redirect(`${origin}${next}`)
-        }
         return NextResponse.redirect(`${origin}${next}`)
       } else {
         console.error('Error exchanging code for session:', error)
