@@ -66,8 +66,8 @@ export async function signInWithGoogle() {
     redirect(data.url)
   }
   
-  // Only reachable in edge cases
-  return { error: 'Failed to initiate Google login' }
+  // This line will never be reached due to redirect, but TypeScript needs it
+  throw new Error('Failed to initiate Google login')
 }
 
 export async function requestPasswordReset(formData: FormData) {
