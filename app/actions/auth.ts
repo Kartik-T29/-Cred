@@ -66,7 +66,7 @@ export async function signInWithGoogle() {
     redirect(data.url)
   }
   
-  // This should never happen, but just in case
+  // Only reachable in edge cases
   return { error: 'Failed to initiate Google login' }
 }
 
