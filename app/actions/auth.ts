@@ -65,6 +65,8 @@ export async function signInWithGoogle() {
   if (data.url) {
     redirect(data.url)
   }
+  
+  return { error: 'Failed to initiate Google login' }
 }
 
 export async function requestPasswordReset(formData: FormData) {
@@ -87,5 +89,5 @@ export async function requestPasswordReset(formData: FormData) {
 export async function signOut() {
   const supabase = await createClient()
   await supabase.auth.signOut()
-  redirect('/')
+  redirect('/login')
 }
