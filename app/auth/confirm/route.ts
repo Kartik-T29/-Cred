@@ -9,16 +9,13 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get('next') ?? '/'
 
   if (token_hash && type) {
-    const response = NextResponse.next()
+    const response = NextResponse.redirect(new URL(next, request.url))
     const supabase = await createClientOnServer(response)
     
     // Verify the OTP and set the session
     const { error } = await supabase.auth.verifyOtp({ type, token_hash })
     
     if (!error) {
-      // Set the redirect in the response that has the session cookies
-      response.headers.set('Location', new URL(next, request.url).toString())
-      response.status = 302
       return response
     }
     
