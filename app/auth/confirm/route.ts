@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
   if (token_hash && type) {
     const supabase = await createClient()
     
-    // Verify the OTP
-    const { data, error } = await supabase.auth.verifyOtp({ type, token_hash })
+    // Verify the OTP and set the session
+    const { error } = await supabase.auth.verifyOtp({ type, token_hash })
     
     if (!error) {
       // Successfully verified - redirect to the intended destination
