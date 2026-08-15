@@ -11,12 +11,13 @@ export async function GET(request: Request) {
 
   // Handle OAuth callback
   if (code) {
-    const supabase = await createClientOnServer(NextResponse.next())
+    const response = NextResponse.redirect(new URL(next, origin))
+    const supabase = await createClientOnServer(response)
     
     try {
       const { data, error } = await supabase.auth.exchangeCodeForSession(code)
       if (!error) {
-        return NextResponse.redirect(new URL(next, origin))
+        return response
       } else {
         console.error('Error exchanging code for session:', error)
       }
@@ -32,12 +33,13 @@ export async function GET(request: Request) {
 
   // Handle email verification callback
   if (token_hash && type) {
-    const supabase = await createClientOnServer(NextResponse.next())
+    const response = NextResponse.redirect(new URL(next, origin))
+    const supabase = await createClientOnServer(response)
     
     try {
       const { data, error } = await supabase.auth.verifyOtp({ type, token_hash })
       if (!error) {
-        return NextResponse.redirect(new URL(next, origin))
+        return response
       } else {
         console.error('Error verifying OTP:', error)
       }
