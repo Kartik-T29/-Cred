@@ -16,9 +16,11 @@ export async function GET(request: Request) {
       const { error } = await supabase.auth.exchangeCodeForSession(code)
       if (!error) {
         return NextResponse.redirect(`${origin}${next}`)
+      } else {
+        console.error('Error exchanging code for session:', error)
       }
     } catch (error) {
-      console.error('Error exchanging code for session:', error)
+      console.error('Unexpected error exchanging code for session:', error)
     }
     
     // Return the user to login with an error
@@ -32,12 +34,17 @@ export async function GET(request: Request) {
       const { error } = await supabase.auth.verifyOtp({ type, token_hash })
       if (!error) {
         return NextResponse.redirect(`${origin}${next}`)
+      } else {
+        console.error('Error verifying OTP:', error)
+        // Return the user to login with an error
+        return NextResponse.redirect(`${origin}/login?error=verification-failed`)
       }
     } catch (error) {
-      console.error('Error verifying OTP:', error)
+      console.error('Unexpected error verifying OTP:', error)
+      return NextResponse.redirect(`${origin}/login?error=unexpected-error`)
     }
   }
 
   // Default fallback
-  return NextResponse.redirect(`${origin}/login?error=auth-code-error`)
+  return NextResponse.redirect(`${origin}/login?error=invalid-request`)
 }

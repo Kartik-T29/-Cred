@@ -89,6 +89,11 @@ export async function requestPasswordReset(formData: FormData) {
 
 export async function signOut() {
   const supabase = await createClient()
-  await supabase.auth.signOut()
+  const { error } = await supabase.auth.signOut()
+  
+  if (error) {
+    console.error('Error signing out:', error)
+  }
+  
   redirect('/login')
 }
