@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       // Check if this is a new OAuth user by getting their user data
       const { data: { user } } = await supabase.auth.getUser()
       // If the user has no metadata or incomplete onboarding, redirect to complete signup
-      if (user && (!user.user_metadata || !user.user_metadata.onboarding_complete)) {
+      if (user && (!user.user_metadata || user.user_metadata.onboarding_complete !== true)) {
         return NextResponse.redirect(`${origin}/signup/complete`)
       }
       return NextResponse.redirect(`${origin}${next}`)
@@ -34,7 +34,7 @@ export async function GET(request: Request) {
     if (!error) {
       // After email verification, check if we should redirect to complete signup
       const { data: { user } } = await supabase.auth.getUser()
-      if (user && (!user.user_metadata || !user.user_metadata.onboarding_complete)) {
+      if (user && (!user.user_metadata || user.user_metadata.onboarding_complete !== true)) {
         return NextResponse.redirect(`${origin}/signup/complete`)
       }
       return NextResponse.redirect(`${origin}${next}`)
