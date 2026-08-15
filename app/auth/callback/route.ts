@@ -14,11 +14,6 @@ export async function GET(request: Request) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      // Check if this is a new OAuth user who needs to complete their profile
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user && !user.user_metadata?.profile_completed) {
-        return NextResponse.redirect(`${origin}/signup/complete`)
-      }
       return NextResponse.redirect(`${origin}${next}`)
     }
     
