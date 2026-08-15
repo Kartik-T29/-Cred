@@ -10,12 +10,21 @@ export async function GET(request: NextRequest) {
 
   if (token_hash && type) {
     const supabase = await createClient()
-    const { error } = await supabase.auth.verifyOtp({ type, token_hash })
+    
+    // Verify the OTP
+    const { data, error } = await supabase.auth.verifyOtp({ type, token_hash })
+    
     if (!error) {
-      return NextResponse.redirect(new URL(next, request.url))
+      // Successfully verified - redirect to the intended destination
+      const redirectTo = new URL(next, request.url)
+      return NextResponse.redirect(redirectTo)
     }
+    
+    console.error('OTP verification failed:', error)
   }
 
   // Redirect to login with error if verification fails
-  return NextResponse.redirect(new URL('/login?error=verification-failed', request.url))
+  const redirectUrl = new URL('/login', request.url)
+  redirectUrl.searchParams.set('error', 'verification-failed')
+  return NextResponse.redirect(redirectUrl)
 }

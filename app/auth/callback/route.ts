@@ -13,9 +13,10 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = await createClient()
     try {
-      const { error } = await supabase.auth.exchangeCodeForSession(code)
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code)
       if (!error) {
-        return NextResponse.redirect(`${origin}${next}`)
+        const redirectTo = new URL(next, origin)
+        return NextResponse.redirect(redirectTo)
       } else {
         console.error('Error exchanging code for session:', error)
       }
@@ -24,27 +25,36 @@ export async function GET(request: Request) {
     }
     
     // Return the user to login with an error
-    return NextResponse.redirect(`${origin}/login?error=oauth-failed`)
+    const redirectUrl = new URL('/login', origin)
+    redirectUrl.searchParams.set('error', 'oauth-failed')
+    return NextResponse.redirect(redirectUrl)
   }
 
   // Handle email verification callback
   if (token_hash && type) {
     const supabase = await createClient()
     try {
-      const { error } = await supabase.auth.verifyOtp({ type, token_hash })
+      const { data, error } = await supabase.auth.verifyOtp({ type, token_hash })
       if (!error) {
-        return NextResponse.redirect(`${origin}${next}`)
+        const redirectTo = new URL(next, origin)
+        return NextResponse.redirect(redirectTo)
       } else {
         console.error('Error verifying OTP:', error)
         // Return the user to login with an error
-        return NextResponse.redirect(`${origin}/login?error=verification-failed`)
+        const redirectUrl = new URL('/login', origin)
+        redirectUrl.searchParams.set('error', 'verification-failed')
+        return NextResponse.redirect(redirectUrl)
       }
     } catch (error) {
       console.error('Unexpected error verifying OTP:', error)
-      return NextResponse.redirect(`${origin}/login?error=unexpected-error`)
+      const redirectUrl = new URL('/login', origin)
+      redirectUrl.searchParams.set('error', 'unexpected-error')
+      return NextResponse.redirect(redirectUrl)
     }
   }
 
   // Default fallback
-  return NextResponse.redirect(`${origin}/login?error=invalid-request`)
+  const redirectUrl = new URL('/login', origin)
+  redirectUrl.searchParams.set('error', 'invalid-request')
+  return NextResponse.redirect(redirectUrl)
 }
