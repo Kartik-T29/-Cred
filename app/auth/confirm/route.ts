@@ -9,16 +9,14 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get('next') ?? '/'
 
   if (token_hash && type) {
-    const response = NextResponse.next()
+    const response = NextResponse.redirect(new URL(next, request.url))
     const supabase = await createClientOnServer(response)
     
     // Verify the OTP and set the session
     const { error } = await supabase.auth.verifyOtp({ type, token_hash })
     
     if (!error) {
-      // Successfully verified - redirect to the intended destination
-      const redirectTo = new URL(next, request.url)
-      return NextResponse.redirect(redirectTo)
+      return response
     }
     
     console.error('OTP verification failed:', error)

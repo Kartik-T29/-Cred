@@ -20,10 +20,10 @@ export default function LoginPage() {
       const result = await signInWithEmail(formData)
       if (result?.error) {
         setError(result.error)
+        setLoading(false)
       }
     } catch (err) {
       setError('An unexpected error occurred')
-    } finally {
       setLoading(false)
     }
   }
