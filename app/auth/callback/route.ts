@@ -15,13 +15,6 @@ export async function GET(request: Request) {
     try {
       const { error } = await supabase.auth.exchangeCodeForSession(code)
       if (!error) {
-        // Check if this is a new OAuth user who needs to complete their profile
-        const { data: { user } } = await supabase.auth.getUser()
-        if (user && (!user.user_metadata || !user.user_metadata.onboarding_complete)) {
-          // Redirect to onboarding if it exists
-          // For now, we'll redirect to the normal next destination
-          return NextResponse.redirect(`${origin}${next}`)
-        }
         return NextResponse.redirect(`${origin}${next}`)
       } else {
         console.error('Error exchanging code for session:', error)
