@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get('next') ?? '/'
 
   if (token_hash && type) {
-    const supabase = await createClientOnServer(NextResponse.next())
+    const response = NextResponse.next()
+    const supabase = await createClientOnServer(response)
     
     // Verify the OTP and set the session
     const { error } = await supabase.auth.verifyOtp({ type, token_hash })

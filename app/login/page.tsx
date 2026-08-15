@@ -20,10 +20,6 @@ export default function LoginPage() {
       const result = await signInWithEmail(formData)
       if (result?.error) {
         setError(result.error)
-      } else if (result?.success) {
-        // Redirect to home page after successful login
-        router.push('/')
-        router.refresh()
       }
     } catch (err) {
       setError('An unexpected error occurred')
