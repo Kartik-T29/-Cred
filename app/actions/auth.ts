@@ -2,7 +2,6 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { headers } from 'next/headers'
-import { redirect } from 'next/navigation'
 
 export async function signInWithEmail(formData: FormData) {
   const supabase = await createClient()
@@ -16,8 +15,8 @@ export async function signInWithEmail(formData: FormData) {
     return { error: error.message }
   }
 
-  // Redirect to home page after successful login
-  redirect('/')
+  // Return success so the client can handle navigation
+  return { success: true }
 }
 
 export async function signUpWithEmail(formData: FormData) {
@@ -64,11 +63,10 @@ export async function signInWithGoogle() {
   }
 
   if (data.url) {
-    redirect(data.url)
+    return { url: data.url }
   }
   
-  // This line will never be reached due to redirect, but TypeScript needs it
-  throw new Error('Failed to initiate Google login')
+  return { error: 'Failed to get redirect URL from Google' }
 }
 
 export async function requestPasswordReset(formData: FormData) {
@@ -97,6 +95,6 @@ export async function signOut() {
     return { error: 'Failed to sign out' }
   }
   
-  // Redirect to login page after sign out
-  redirect('/login')
+  // Return success so the client can handle navigation with a full reload
+  return { success: true }
 }

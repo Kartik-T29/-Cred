@@ -37,6 +37,7 @@ export default function Navbar({ onOpenChat }: NavbarProps) {
   const handleSignOut = async () => {
     setShowUserMenu(false);
     await signOut();
+    window.location.href = '/login';
   };
 
   // Get user display info

@@ -32,11 +32,15 @@ export default function SignupPage() {
       return
     }
 
-    const result = await signUpWithEmail(formData)
-    if (result?.error) {
-      setError(result.error)
-    } else if (result?.success) {
-      setSuccess(result.success)
+    try {
+      const result = await signUpWithEmail(formData)
+      if (result?.error) {
+        setError(result.error)
+      } else if (result?.success) {
+        setSuccess(result.success)
+      }
+    } catch (err) {
+      setError('An unexpected error occurred')
     }
     setLoading(false)
   }
@@ -44,9 +48,16 @@ export default function SignupPage() {
   const handleGoogleSignup = async () => {
     setLoading(true)
     setError(null)
-    const result = await signInWithGoogle()
-    if (result?.error) {
-      setError(result.error)
+    try {
+      const result = await signInWithGoogle()
+      if (result?.error) {
+        setError(result.error)
+        setLoading(false)
+      } else if (result?.url) {
+        window.location.href = result.url
+      }
+    } catch (err) {
+      setError('An unexpected error occurred')
       setLoading(false)
     }
   }

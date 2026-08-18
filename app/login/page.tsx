@@ -1,17 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { signInWithEmail, signInWithGoogle } from '@/app/actions/auth'
 
-export default function LoginPage() {
+const ERROR_MESSAGES: Record<string, string> = {
+  'oauth-failed': 'Google sign-in failed. Please try again.',
+  'verification-failed': 'Email verification failed. Please try again.',
+  'invalid-request': 'Invalid authentication request.',
+}
+
+function LoginPageContent() {
+  const searchParams = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+
+  // Read error from URL query params (set by /auth/callback on failure)
+  useEffect(() => {
+    const errorCode = searchParams.get('error')
+    if (errorCode && ERROR_MESSAGES[errorCode]) {
+      setError(ERROR_MESSAGES[errorCode])
+    }
+  }, [searchParams])
 
   const handleEmailLogin = async (formData: FormData) => {
     setLoading(true)
@@ -21,6 +36,8 @@ export default function LoginPage() {
       if (result?.error) {
         setError(result.error)
         setLoading(false)
+      } else if (result?.success) {
+        router.push('/')
       }
     } catch (err) {
       setError('An unexpected error occurred')
@@ -36,6 +53,8 @@ export default function LoginPage() {
       if (result?.error) {
         setError(result.error)
         setLoading(false)
+      } else if (result?.url) {
+        window.location.href = result.url
       }
     } catch (err) {
       setError('An unexpected error occurred')
@@ -170,5 +189,13 @@ export default function LoginPage() {
         </p>
       </motion.div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageContent />
+    </Suspense>
   )
 }

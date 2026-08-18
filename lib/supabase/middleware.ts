@@ -28,7 +28,28 @@ export async function updateSession(request: NextRequest) {
   )
 
   // Refresh the session — do NOT use getSession() on the server, always use getUser()
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const pathname = request.nextUrl.pathname
+
+  // Routes that require authentication
+  const protectedRoutes = ['/dashboard', '/settings', '/account']
+  // Routes only for unauthenticated users
+  const authRoutes = ['/login', '/signup', '/forgot-password']
+
+  // Redirect unauthenticated users away from protected routes
+  if (!user && protectedRoutes.some((route) => pathname.startsWith(route))) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/login'
+    return NextResponse.redirect(redirectUrl)
+  }
+
+  // Redirect authenticated users away from auth routes
+  if (user && authRoutes.some((route) => pathname.startsWith(route))) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/'
+    return NextResponse.redirect(redirectUrl)
+  }
 
   return supabaseResponse
 }
