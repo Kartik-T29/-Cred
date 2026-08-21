@@ -7,9 +7,9 @@ export async function GET(request: Request) {
   const code = searchParams.get('code')
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
-  const next = searchParams.get('next') ?? '/'
+  const next = searchParams.get('next') ?? 'https://www.credentai.qzz.io/'
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.credentai.qzz.io';
 
   if (code) {
     const response = NextResponse.redirect(new URL(next, siteUrl))

@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Metrics from "@/components/Metrics";
 import Industries from "@/components/Industries";
+import OfferingsSplitCard from "@/components/OfferingsSplitCard";
 import Pricing from "@/components/Pricing";
 import Footer from "@/components/Footer";
 import ChatModal from "@/components/chatbot/ChatModal";
@@ -25,6 +26,8 @@ export default function Home() {
       <div className="section-divider mx-6 md:mx-12 lg:mx-20 opacity-60"></div>
       
       <Industries />
+      
+      <OfferingsSplitCard />
       
       <div className="section-divider mx-6 md:mx-12 lg:mx-20 opacity-60"></div>
       

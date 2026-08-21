@@ -22,7 +22,7 @@ export async function signInWithEmail(formData: FormData) {
 export async function signUpWithEmail(formData: FormData) {
   const supabase = await createClient()
   const headersList = await headers()
-  const origin = process.env.NEXT_PUBLIC_SITE_URL || headersList.get('origin') || ''
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.credentai.qzz.io'
 
   const fullName = formData.get('full_name') as string
   const email = formData.get('email') as string
@@ -49,7 +49,7 @@ export async function signUpWithEmail(formData: FormData) {
 export async function signInWithGoogle() {
   const supabase = await createClient()
   const headersList = await headers()
-  const origin = process.env.NEXT_PUBLIC_SITE_URL || headersList.get('origin') || ''
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.credentai.qzz.io'
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
@@ -72,7 +72,7 @@ export async function signInWithGoogle() {
 export async function requestPasswordReset(formData: FormData) {
   const supabase = await createClient()
   const headersList = await headers()
-  const origin = process.env.NEXT_PUBLIC_SITE_URL || headersList.get('origin') || ''
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.credentai.qzz.io'
   const email = formData.get('email') as string
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
