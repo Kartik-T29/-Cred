@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export async function signInWithEmail(formData: FormData) {
   const supabase = await createClient()
@@ -15,14 +16,13 @@ export async function signInWithEmail(formData: FormData) {
     return { error: error.message }
   }
 
-  // Return success so the client can handle navigation
   return { success: true }
 }
 
 export async function signUpWithEmail(formData: FormData) {
   const supabase = await createClient()
   const headersList = await headers()
-  const origin = headersList.get('origin') || ''
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || headersList.get('origin') || ''
 
   const fullName = formData.get('full_name') as string
   const email = formData.get('email') as string
@@ -49,7 +49,7 @@ export async function signUpWithEmail(formData: FormData) {
 export async function signInWithGoogle() {
   const supabase = await createClient()
   const headersList = await headers()
-  const origin = headersList.get('origin') || ''
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || headersList.get('origin') || ''
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
@@ -63,16 +63,16 @@ export async function signInWithGoogle() {
   }
 
   if (data.url) {
-    return { url: data.url }
+    return { redirectUrl: data.url }
   }
   
-  return { error: 'Failed to get redirect URL from Google' }
+  return { error: "Failed to initiate Google login" }
 }
 
 export async function requestPasswordReset(formData: FormData) {
   const supabase = await createClient()
   const headersList = await headers()
-  const origin = headersList.get('origin') || ''
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || headersList.get('origin') || ''
   const email = formData.get('email') as string
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -95,6 +95,5 @@ export async function signOut() {
     return { error: 'Failed to sign out' }
   }
   
-  // Return success so the client can handle navigation with a full reload
   return { success: true }
 }

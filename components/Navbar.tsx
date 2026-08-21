@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, LogOut, User } from "lucide-react";
+import { Menu, LogOut, User, ChevronDown } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { signOut } from "@/app/actions/auth";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 interface NavbarProps {
-  onOpenChat: () => void;
+  onOpenChat?: () => void;
 }
 
 export default function Navbar({ onOpenChat }: NavbarProps) {
@@ -19,12 +20,10 @@ export default function Navbar({ onOpenChat }: NavbarProps) {
   useEffect(() => {
     const supabase = createClient();
 
-    // Get initial session
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
     });
 
-    // Listen for auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -36,11 +35,10 @@ export default function Navbar({ onOpenChat }: NavbarProps) {
 
   const handleSignOut = async () => {
     setShowUserMenu(false);
-    await signOut();
-    window.location.href = '/login';
+    const res = await signOut();
+    if (res?.success) window.location.href = '/login';
   };
 
-  // Get user display info
   const userName =
     user?.user_metadata?.full_name ||
     user?.user_metadata?.name ||
@@ -50,15 +48,15 @@ export default function Navbar({ onOpenChat }: NavbarProps) {
   const userInitial = userName.charAt(0).toUpperCase();
 
   return (
-    <nav className="flex flex-col lg:flex-row lg:items-center justify-between px-6 md:px-12 lg:px-20 py-5 font-body relative z-40 bg-background">
+    <nav className="flex flex-col lg:flex-row lg:items-center justify-between px-6 md:px-12 lg:px-20 py-5 font-body relative z-40 bg-background/80 backdrop-blur-xl border-b border-border/50 sticky top-0">
       <div className="flex items-center justify-between w-full lg:w-auto">
         <div className="flex items-center gap-2">
-          <span
+          <Link
+            href="/"
             className="text-xl font-semibold tracking-tight cursor-pointer text-foreground"
-            onClick={() => window.scrollTo(0, 0)}
           >
             ✦ Credent
-          </span>
+          </Link>
         </div>
         <button
           className="lg:hidden p-2 text-foreground"
@@ -73,27 +71,44 @@ export default function Navbar({ onOpenChat }: NavbarProps) {
           isMobileMenuOpen ? "flex" : "hidden"
         } lg:flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-8 mt-6 lg:mt-0 w-full lg:w-auto pb-4 lg:pb-0`}
       >
-        <a
-          href="#metrics"
-          className="text-sm font-body transition-colors duration-200 text-muted-foreground hover:text-primary"
-        >
-          Platform
-        </a>
-        <a
-          href="#industries"
-          className="text-sm font-body transition-colors duration-200 text-muted-foreground hover:text-primary"
-        >
-          Industries
-        </a>
-        <a
-          href="#pricing"
+        <div className="relative group">
+          <button className="flex items-center gap-1 text-sm font-body transition-colors duration-200 text-muted-foreground hover:text-primary">
+            Platform <ChevronDown className="w-3 h-3" />
+          </button>
+          <div className="absolute top-full left-0 mt-2 w-56 rounded-xl border border-border bg-secondary shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col p-2 z-50">
+            <Link href="/platform/ai-transformation" className="px-4 py-2 text-sm text-foreground hover:bg-background rounded-lg transition-colors">
+              AI Transformation
+            </Link>
+            <Link href="/platform/ai-optimization" className="px-4 py-2 text-sm text-foreground hover:bg-background rounded-lg transition-colors">
+              AI Optimization
+            </Link>
+          </div>
+        </div>
+
+        <div className="relative group">
+          <button className="flex items-center gap-1 text-sm font-body transition-colors duration-200 text-muted-foreground hover:text-primary">
+            Industries <ChevronDown className="w-3 h-3" />
+          </button>
+          <div className="absolute top-full left-0 mt-2 w-56 rounded-xl border border-border bg-secondary shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col p-2 z-50">
+            <Link href="/industries/financial-services" className="px-4 py-2 text-sm text-foreground hover:bg-background rounded-lg transition-colors">
+              Financial Services
+            </Link>
+            <Link href="/industries/healthcare" className="px-4 py-2 text-sm text-foreground hover:bg-background rounded-lg transition-colors">
+              Healthcare
+            </Link>
+          </div>
+        </div>
+
+        <Link
+          href="/#pricing"
           className="text-sm font-body transition-colors duration-200 text-muted-foreground hover:text-primary"
         >
           Pricing
-        </a>
+        </Link>
         <div className="flex lg:hidden w-full h-[1px] bg-border my-2"></div>
 
         <div className="flex items-center gap-3 w-full lg:w-auto">
+          <ThemeToggle />
           <button
             onClick={onOpenChat}
             className="inline-flex items-center rounded-full px-5 py-2.5 text-sm font-medium font-body transition-all duration-200 w-full lg:w-auto justify-center bg-primary text-primary-foreground hover:opacity-90"
@@ -102,7 +117,6 @@ export default function Navbar({ onOpenChat }: NavbarProps) {
           </button>
 
           {user ? (
-            /* Logged in — show avatar + dropdown */
             <div className="relative">
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
@@ -127,12 +141,11 @@ export default function Navbar({ onOpenChat }: NavbarProps) {
 
               {showUserMenu && (
                 <>
-                  {/* Backdrop to close menu */}
                   <div
                     className="fixed inset-0 z-40"
                     onClick={() => setShowUserMenu(false)}
                   />
-                  <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-border bg-background shadow-xl z-50 overflow-hidden">
+                  <div className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-border bg-secondary shadow-xl z-50 overflow-hidden">
                     <div className="px-4 py-3 border-b border-border">
                       <p className="text-sm font-medium text-foreground truncate">
                         {userName}
@@ -153,7 +166,6 @@ export default function Navbar({ onOpenChat }: NavbarProps) {
               )}
             </div>
           ) : (
-            /* Not logged in — show Sign In link */
             <Link
               href="/login"
               className="inline-flex items-center gap-1.5 rounded-full border border-border px-5 py-2.5 text-sm font-medium font-body transition-all duration-200 text-foreground hover:bg-secondary w-full lg:w-auto justify-center"

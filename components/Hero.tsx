@@ -66,8 +66,8 @@ export default function Hero({ onOpenChat }: HeroProps) {
         />
       </video>
       <div
-        className="absolute inset-0 z-[1]"
-        style={{ background: "rgba(255,255,255,0.84)" }}
+        className="absolute inset-0 z-[1] transition-colors duration-500"
+        style={{ background: "var(--hero-overlay)" }}
       ></div>
 
       <div className="relative z-10 flex flex-col items-center w-full px-4 md:px-6 pt-6 md:pt-12">
@@ -75,12 +75,7 @@ export default function Hero({ onOpenChat }: HeroProps) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
-          className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-body mb-6 text-muted-foreground"
-          style={{
-            border: "1px solid hsl(var(--border))",
-            background: "hsla(0,0%,100%,0.8)",
-            backdropFilter: "blur(8px)",
-          }}
+          className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-body mb-6 text-muted-foreground glass-surface"
         >
           Now powering intelligent business operations ✨
         </motion.div>
@@ -102,7 +97,7 @@ export default function Hero({ onOpenChat }: HeroProps) {
               transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              <h1 className="font-display leading-[1.05] md:leading-[0.95] tracking-tight text-4xl md:text-6xl lg:text-[5rem] w-full text-foreground">
+              <h1 className="font-display leading-[1.05] md:leading-[0.95] tracking-tight text-4xl md:text-6xl lg:text-[5rem] w-full gradient-text">
                 {carouselSlides[currentSlide].content}
               </h1>
             </motion.div>
@@ -147,7 +142,7 @@ export default function Hero({ onOpenChat }: HeroProps) {
         >
           <button
             onClick={onOpenChat}
-            className="inline-flex items-center rounded-full px-6 py-3 text-sm font-medium font-body transition-all duration-200 bg-primary text-primary-foreground hover:opacity-90"
+            className="inline-flex items-center rounded-full px-6 py-3 text-sm font-medium font-body transition-all duration-200 bg-primary text-primary-foreground hover:opacity-90 glow-accent"
           >
             Launch Productivity Advisor
           </button>

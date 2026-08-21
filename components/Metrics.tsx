@@ -64,28 +64,28 @@ export default function Metrics() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <motion.div variants={itemVariants} className="text-center p-8 rounded-2xl bg-secondary border border-border">
+          <motion.div variants={itemVariants} className="text-center p-8 rounded-2xl bg-secondary border border-border hover:border-accent/30 transition-colors duration-300">
             <div className="font-display text-5xl md:text-6xl tracking-tight mb-2 text-foreground">
               <AnimatedCounter from={0} to={128} />
             </div>
             <p className="text-sm font-medium text-foreground">Hours Saved Monthly</p>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="text-center p-8 rounded-2xl bg-secondary border border-border">
+          <motion.div variants={itemVariants} className="text-center p-8 rounded-2xl bg-secondary border border-border hover:border-accent/30 transition-colors duration-300">
             <div className="font-display text-5xl md:text-6xl tracking-tight mb-2 text-foreground">
               <AnimatedCounter from={0} to={42} />%
             </div>
             <p className="text-sm font-medium text-foreground">Tasks Automated</p>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="text-center p-8 rounded-2xl bg-secondary border border-border">
+          <motion.div variants={itemVariants} className="text-center p-8 rounded-2xl bg-secondary border border-border hover:border-accent/30 transition-colors duration-300">
             <div className="font-display text-5xl md:text-6xl tracking-tight mb-2 text-foreground">
               <AnimatedCounter from={0} to={2400} />+
             </div>
             <p className="text-sm font-medium text-foreground">Teams Onboarded</p>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="text-center p-8 rounded-2xl bg-secondary border border-border">
+          <motion.div variants={itemVariants} className="text-center p-8 rounded-2xl bg-secondary border border-border hover:border-accent/30 transition-colors duration-300">
             <div className="font-display text-5xl md:text-6xl tracking-tight mb-2 text-foreground">
               <AnimatedCounter from={0} to={68} />%
             </div>

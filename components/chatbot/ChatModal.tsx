@@ -93,7 +93,7 @@ export default function ChatModal({ isOpen, onClose, onOpenBooking }: ChatModalP
 
       <div
         ref={chatHistoryRef}
-        className="flex-1 p-4 overflow-y-auto flex flex-col gap-3 text-sm font-body bg-[#f5f5f5]/30"
+        className="flex-1 p-4 overflow-y-auto flex flex-col gap-3 text-sm font-body bg-muted/30"
       >
         {messages.map((msg, idx) => (
           <div
@@ -101,7 +101,7 @@ export default function ChatModal({ isOpen, onClose, onOpenBooking }: ChatModalP
             className={`p-3 rounded-xl leading-relaxed shadow-sm max-w-[85%] ${
               msg.role === "advisor"
                 ? "rounded-tl-sm self-start bg-secondary text-foreground border border-border"
-                : "rounded-tr-sm self-end bg-foreground text-background"
+                : "rounded-tr-sm self-end bg-accent text-accent-foreground"
             }`}
             dangerouslySetInnerHTML={{ __html: msg.content.replace(/\n/g, "<br>") }}
           />

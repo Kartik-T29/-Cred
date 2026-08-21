@@ -32,15 +32,11 @@ export default function SignupPage() {
       return
     }
 
-    try {
-      const result = await signUpWithEmail(formData)
-      if (result?.error) {
-        setError(result.error)
-      } else if (result?.success) {
-        setSuccess(result.success)
-      }
-    } catch (err) {
-      setError('An unexpected error occurred')
+    const result = await signUpWithEmail(formData)
+    if (result?.error) {
+      setError(result.error)
+    } else if (result?.success) {
+      setSuccess(result.success)
     }
     setLoading(false)
   }
@@ -48,18 +44,13 @@ export default function SignupPage() {
   const handleGoogleSignup = async () => {
     setLoading(true)
     setError(null)
-    try {
-      const result = await signInWithGoogle()
-      if (result?.error) {
+    const result = await signInWithGoogle() as { error?: string; redirectUrl?: string }
+    if (result?.error) {
         setError(result.error)
         setLoading(false)
-      } else if (result?.url) {
-        window.location.href = result.url
+      } else if (result?.redirectUrl) {
+        window.location.href = result.redirectUrl
       }
-    } catch (err) {
-      setError('An unexpected error occurred')
-      setLoading(false)
-    }
   }
 
   return (
@@ -78,7 +69,7 @@ export default function SignupPage() {
         </Link>
 
         {/* Card */}
-        <div className="rounded-2xl border border-border bg-background p-8 shadow-lg">
+        <div className="rounded-2xl border border-border bg-secondary p-8 shadow-lg">
           {success ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -211,7 +202,7 @@ export default function SignupPage() {
                   <motion.p
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-xs text-red-500 text-center bg-red-50 rounded-lg py-2 px-3"
+                    className="text-xs text-red-400 text-center bg-red-500/10 rounded-lg py-2 px-3"
                   >
                     {error}
                   </motion.p>

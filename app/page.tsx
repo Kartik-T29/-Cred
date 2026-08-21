@@ -22,11 +22,11 @@ export default function Home() {
       
       <Metrics />
       
-      <div className="section-divider mx-6 md:mx-12 lg:mx-20"></div>
+      <div className="section-divider mx-6 md:mx-12 lg:mx-20 opacity-60"></div>
       
       <Industries />
       
-      <div className="section-divider mx-6 md:mx-12 lg:mx-20"></div>
+      <div className="section-divider mx-6 md:mx-12 lg:mx-20 opacity-60"></div>
       
       <Pricing onOpenBooking={() => setIsBookingOpen(true)} />
       

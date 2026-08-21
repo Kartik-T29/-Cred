@@ -12,10 +12,8 @@ export default function DashboardPreview() {
       className="mt-10 w-full max-w-6xl px-4"
     >
       <div
-        className="rounded-2xl overflow-hidden p-2 md:p-4 backdrop-blur-[20px]"
+        className="rounded-2xl overflow-hidden p-2 md:p-4 backdrop-blur-[20px] glass-surface"
         style={{
-          background: "rgba(255,255,255,0.45)",
-          border: "1px solid rgba(255,255,255,0.55)",
           boxShadow: "var(--shadow-dashboard)",
         }}
       >
@@ -44,7 +42,7 @@ export default function DashboardPreview() {
             </div>
           </div>
           <div className="flex flex-col md:flex-row min-h-[280px]">
-            <div className="flex-1 p-4 md:p-6 bg-[#f5f5f5]/30">
+            <div className="flex-1 p-4 md:p-6 bg-muted/30">
               <div className="mb-4">
                 <div className="text-sm font-semibold text-foreground">
                   Welcome back, Aditya

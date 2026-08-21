@@ -86,7 +86,7 @@ export default function Industries() {
             <div 
               key={industry.id}
               onClick={() => toggleCard(industry.id)}
-              className="bg-background rounded-2xl p-5 md:p-6 cursor-pointer transition-all duration-300 border border-border hover:border-foreground"
+              className="bg-secondary rounded-2xl p-5 md:p-6 cursor-pointer transition-all duration-300 border border-border hover:border-accent/50"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">

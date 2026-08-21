@@ -1,32 +1,17 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { signInWithEmail, signInWithGoogle } from '@/app/actions/auth'
 
-const ERROR_MESSAGES: Record<string, string> = {
-  'oauth-failed': 'Google sign-in failed. Please try again.',
-  'verification-failed': 'Email verification failed. Please try again.',
-  'invalid-request': 'Invalid authentication request.',
-}
-
-function LoginPageContent() {
-  const searchParams = useSearchParams()
+export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-
-  // Read error from URL query params (set by /auth/callback on failure)
-  useEffect(() => {
-    const errorCode = searchParams.get('error')
-    if (errorCode && ERROR_MESSAGES[errorCode]) {
-      setError(ERROR_MESSAGES[errorCode])
-    }
-  }, [searchParams])
 
   const handleEmailLogin = async (formData: FormData) => {
     setLoading(true)
@@ -38,7 +23,7 @@ function LoginPageContent() {
         setLoading(false)
       } else if (result?.success) {
         router.push('/')
-      }
+      } 
     } catch (err) {
       setError('An unexpected error occurred')
       setLoading(false)
@@ -49,12 +34,12 @@ function LoginPageContent() {
     setLoading(true)
     setError(null)
     try {
-      const result = await signInWithGoogle()
+      const result = await signInWithGoogle() as { error?: string; redirectUrl?: string }
       if (result?.error) {
         setError(result.error)
         setLoading(false)
-      } else if (result?.url) {
-        window.location.href = result.url
+      } else if (result?.redirectUrl) {
+        window.location.href = result.redirectUrl
       }
     } catch (err) {
       setError('An unexpected error occurred')
@@ -78,7 +63,7 @@ function LoginPageContent() {
         </Link>
 
         {/* Card */}
-        <div className="rounded-2xl border border-border bg-background p-8 shadow-lg">
+        <div className="rounded-2xl border border-border bg-secondary p-8 shadow-lg">
           <div className="text-center mb-6">
             <h1 className="font-display text-3xl tracking-tight text-foreground mb-2">
               Welcome back
@@ -164,7 +149,7 @@ function LoginPageContent() {
               <motion.p
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-xs text-red-500 text-center bg-red-50 rounded-lg py-2 px-3"
+                className="text-xs text-red-400 text-center bg-red-500/10 rounded-lg py-2 px-3"
               >
                 {error}
               </motion.p>
@@ -189,13 +174,5 @@ function LoginPageContent() {
         </p>
       </motion.div>
     </div>
-  )
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={null}>
-      <LoginPageContent />
-    </Suspense>
   )
 }

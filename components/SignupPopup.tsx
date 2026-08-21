@@ -78,7 +78,7 @@ export default function SignupPopup({ delaySeconds = 45 }: SignupPopupProps) {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="fixed inset-0 z-[95] flex items-center justify-center px-4 pointer-events-none"
           >
-            <div className="w-full max-w-[440px] rounded-2xl border border-border bg-background p-8 shadow-2xl relative pointer-events-auto">
+            <div className="w-full max-w-[440px] rounded-2xl border border-border bg-secondary p-8 shadow-2xl relative pointer-events-auto glow-accent">
               {/* Close button */}
               <button
                 onClick={handleDismiss}

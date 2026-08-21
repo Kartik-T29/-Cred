@@ -60,7 +60,7 @@ export default function UpdatePasswordPage() {
         </Link>
 
         {/* Card */}
-        <div className="rounded-2xl border border-border bg-background p-8 shadow-lg">
+        <div className="rounded-2xl border border-border bg-secondary p-8 shadow-lg">
           {success ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -138,7 +138,7 @@ export default function UpdatePasswordPage() {
                   <motion.p
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-xs text-red-500 text-center bg-red-50 rounded-lg py-2 px-3"
+                    className="text-xs text-red-400 text-center bg-red-500/10 rounded-lg py-2 px-3"
                   >
                     {error}
                   </motion.p>
